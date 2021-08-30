@@ -1,48 +1,48 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 
-const gulp = require('gulp');
-const browserSync = require('browser-sync');
-const htmlmin = require('gulp-htmlmin');
-const sass = require('gulp-sass');
-const rename = require('gulp-rename');
-const autoprefixer = require('gulp-autoprefixer');
-const cleanCSS = require('gulp-clean-css');
-const webpackStream = require('webpack-stream');
-const changed = require('gulp-changed');
-const dircompare = require('dir-compare');
-const imagemin = require('gulp-imagemin');
-const imageminPngquant = require('imagemin-pngquant');
-const imageminZopfli = require('imagemin-zopfli');
-const imageminGiflossy = require('imagemin-giflossy');
+const gulp = require('gulp')
+const browserSync = require('browser-sync')
+const htmlmin = require('gulp-htmlmin')
+const sass = require('gulp-sass')
+const rename = require('gulp-rename')
+const autoprefixer = require('gulp-autoprefixer')
+const cleanCSS = require('gulp-clean-css')
+const webpackStream = require('webpack-stream')
+const changed = require('gulp-changed')
+const dircompare = require('dir-compare')
+const imagemin = require('gulp-imagemin')
+const imageminPngquant = require('imagemin-pngquant')
+const imageminZopfli = require('imagemin-zopfli')
+const imageminGiflossy = require('imagemin-giflossy')
 
-const distPath = path.join(__dirname, 'dist');
-const srcPath = path.join(__dirname, 'src');
+const distPath = path.join(__dirname, 'dist')
+const srcPath = path.join(__dirname, 'src')
 
-const distHtmlPath = distPath;
-const srcHtmlPath = srcPath;
+const distHtmlPath = distPath
+const srcHtmlPath = srcPath
 
-const cssDir = 'css';
+const cssDir = 'css'
 // const cssPreprocessorType = 'sass'
-const cssPreprocessorType = 'scss';
-const distStylesPath = path.join(distPath, cssDir);
-const srcStylesPath = path.join(srcPath, cssPreprocessorType);
+const cssPreprocessorType = 'scss'
+const distStylesPath = path.join(distPath, cssDir)
+const srcStylesPath = path.join(srcPath, cssPreprocessorType)
 
-const jsDir = 'js';
-const distScriptsPath = path.join(distPath, jsDir);
-const srcScriptsPath = path.join(srcPath, jsDir);
+const jsDir = 'js'
+const distScriptsPath = path.join(distPath, jsDir)
+const srcScriptsPath = path.join(srcPath, jsDir)
 
-const fontsDir = 'fonts';
-const distFontsPath = path.join(distPath, fontsDir);
-const srcFontsPath = path.join(srcPath, fontsDir);
+const fontsDir = 'fonts'
+const distFontsPath = path.join(distPath, fontsDir)
+const srcFontsPath = path.join(srcPath, fontsDir)
 
-const iconsDir = 'icons';
-const distIconsPath = path.join(distPath, iconsDir);
-const srcIconsPath = path.join(srcPath, iconsDir);
+const iconsDir = 'icons'
+const distIconsPath = path.join(distPath, iconsDir)
+const srcIconsPath = path.join(srcPath, iconsDir)
 
-const imgDir = 'img';
-const distImagesPath = path.join(distPath, imgDir);
-const srcImagesPath = path.join(srcPath, imgDir);
+const imgDir = 'img'
+const distImagesPath = path.join(distPath, imgDir)
+const srcImagesPath = path.join(srcPath, imgDir)
 
 gulp.task('init-project', () => {
   if (fs.existsSync(distPath) || fs.existsSync(srcPath)) {
@@ -51,11 +51,11 @@ gulp.task('init-project', () => {
 Seems like the project has already been initialized... 
 Remove src and dist folders to make this command work.
 ======`
-    );
-    return gulp.src('.');
+    )
+    return gulp.src('.')
   }
 
-  const fsCb = (error) => (error ? console.log(error.toString()) : undefined);
+  const fsCb = (error) => (error ? console.log(error.toString()) : undefined)
 
   const gitignoreContent = `/node_modules
 /coverage
@@ -70,9 +70,9 @@ Remove src and dist folders to make this command work.
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*  
-`;
+`
 
-  fs.writeFile(path.join(__dirname, '.gitignore'), gitignoreContent, fsCb);
+  fs.writeFile(path.join(__dirname, '.gitignore'), gitignoreContent, fsCb)
 
   const eslintrcContent = `{
   "env": {
@@ -98,9 +98,9 @@ yarn-error.log*
     "max-len": "warn",
     "no-unused-vars": "warn"
   }
-}`;
+}`
 
-  fs.writeFile(path.join(__dirname, '.eslintrc.json'), eslintrcContent, fsCb);
+  fs.writeFile(path.join(__dirname, '.eslintrc.json'), eslintrcContent, fsCb)
 
   const prettierrcContent = `{
   "trailingComma": "none",
@@ -109,14 +109,14 @@ yarn-error.log*
   "singleQuote": true,
   "bracketSpacing": true,
   "arrowParens": "always"
-}`;
+}`
 
   fs.writeFile(
     path.join(__dirname, '.prettierrc.json'),
     prettierrcContent,
     fsCb
-  );
-  [
+  )
+  ;[
     distPath,
     distStylesPath,
     distFontsPath,
@@ -129,11 +129,11 @@ yarn-error.log*
     srcIconsPath,
     srcImagesPath,
     srcScriptsPath
-  ].forEach((folder) => fs.mkdir(folder, fsCb));
+  ].forEach((folder) => fs.mkdir(folder, fsCb))
 
-  fs.writeFile(path.join(distHtmlPath, 'index.html'), '', fsCb);
-  fs.writeFile(path.join(distStylesPath, 'style.min.css'), '', fsCb);
-  fs.writeFile(path.join(distScriptsPath, 'bundle.js'), '', fsCb);
+  fs.writeFile(path.join(distHtmlPath, 'index.html'), '', fsCb)
+  fs.writeFile(path.join(distStylesPath, 'style.min.css'), '', fsCb)
+  fs.writeFile(path.join(distScriptsPath, 'bundle.js'), '', fsCb)
 
   const indexHTMLContent = `<!DOCTYPE html>
 <html lang="en">
@@ -148,12 +148,12 @@ yarn-error.log*
   
   <script src="${jsDir}/bundle.js"></script>
 </body>
-</html>`;
+</html>`
 
-  fs.writeFile(path.join(srcPath, 'index.html'), indexHTMLContent, fsCb);
+  fs.writeFile(path.join(srcPath, 'index.html'), indexHTMLContent, fsCb)
 
-  fs.mkdir(path.join(srcScriptsPath, 'modules'), fsCb);
-  fs.writeFile(path.join(srcScriptsPath, 'main.js'), '', fsCb);
+  fs.mkdir(path.join(srcScriptsPath, 'modules'), fsCb)
+  fs.writeFile(path.join(srcScriptsPath, 'main.js'), '', fsCb)
 
   const styleSASSContent = `// libs imports
 
@@ -167,7 +167,7 @@ yarn-error.log*
   padding: 0
   box-sizing: border-box
 
-// blocks imports`;
+// blocks imports`
 
   const styleSCSSContent = `// libs imports
 
@@ -182,7 +182,7 @@ yarn-error.log*
   box-sizing: border-box;
 }
 
-// blocks imports`;
+// blocks imports`
 
   switch (cssPreprocessorType) {
     case 'sass':
@@ -190,40 +190,40 @@ yarn-error.log*
         path.join(srcStylesPath, 'style.sass'),
         styleSASSContent,
         fsCb
-      );
-      break;
+      )
+      break
     case 'scss':
       fs.writeFile(
         path.join(srcStylesPath, 'style.scss'),
         styleSCSSContent,
         fsCb
-      );
-      break;
+      )
+      break
   }
 
-  ['base', 'blocks', 'libs'].forEach((folder) =>
+  ;['base', 'blocks', 'libs'].forEach((folder) =>
     fs.mkdir(path.join(srcStylesPath, folder), fsCb)
-  );
-  [
+  )
+  ;[
     `_animations.${cssPreprocessorType}`,
     `_fonts.${cssPreprocessorType}`,
     `_mixins.${cssPreprocessorType}`,
     `_variables.${cssPreprocessorType}`
   ].forEach((filename) => {
-    fs.writeFile(path.join(srcStylesPath, 'base', filename), '', fsCb);
-  });
+    fs.writeFile(path.join(srcStylesPath, 'base', filename), '', fsCb)
+  })
 
-  gulp.parallel('dist-sync')();
-  return gulp.src('.');
-});
+  gulp.parallel('dist-sync')()
+  return gulp.src('.')
+})
 
 gulp.task('html', () => {
   return gulp
     .src(`${srcHtmlPath}/*.html`)
     .pipe(htmlmin({ collapseWhitespace: true }))
     .pipe(gulp.dest(distHtmlPath))
-    .pipe(browserSync.stream());
-});
+    .pipe(browserSync.stream())
+})
 
 gulp.task('styles', () => {
   return gulp
@@ -233,8 +233,8 @@ gulp.task('styles', () => {
     .pipe(autoprefixer({ cascade: false }))
     .pipe(cleanCSS({ compatibility: 'ie8' }))
     .pipe(gulp.dest(distStylesPath))
-    .pipe(browserSync.stream());
-});
+    .pipe(browserSync.stream())
+})
 
 gulp.task('scripts', () => {
   return gulp
@@ -275,20 +275,20 @@ gulp.task('scripts', () => {
       })
     )
     .pipe(gulp.dest(distScriptsPath))
-    .pipe(browserSync.stream());
-});
+    .pipe(browserSync.stream())
+})
 
 function cleanUnusedFiles(distFolderPath, srcFolderPath) {
-  const options = { compareName: true };
+  const options = { compareName: true }
 
   const foldersComparisonResult = dircompare.compareSync(
     distFolderPath,
     srcFolderPath,
     options
-  );
+  )
 
   if (foldersComparisonResult.differences > 0) {
-    let lastRemovedDirectory;
+    let lastRemovedDirectory
     for (const set of foldersComparisonResult.diffSet) {
       if (set.type2 === 'missing') {
         switch (set.type1) {
@@ -298,28 +298,28 @@ function cleanUnusedFiles(distFolderPath, srcFolderPath) {
                 lastRemovedDirectory === set.path1 ||
                 path.relative(lastRemovedDirectory, set.path1)
               ) {
-                continue;
+                continue
               }
             }
 
             try {
-              fs.unlinkSync(path.join(set.path1, set.name1));
+              fs.unlinkSync(path.join(set.path1, set.name1))
             } catch (err) {
-              console.log(err);
+              console.log(err)
             }
 
-            break;
+            break
           case 'directory':
             try {
               fs.rmdirSync(path.join(set.path1, set.name1), {
                 recursive: true
-              });
-              lastRemovedDirectory = set.path1;
+              })
+              lastRemovedDirectory = set.path1
             } catch (err) {
-              console.log(err);
+              console.log(err)
             }
 
-            break;
+            break
         }
       }
     }
@@ -327,25 +327,25 @@ function cleanUnusedFiles(distFolderPath, srcFolderPath) {
 }
 
 gulp.task('fonts', () => {
-  cleanUnusedFiles(distFontsPath, srcFontsPath);
+  cleanUnusedFiles(distFontsPath, srcFontsPath)
   return gulp
     .src(`${srcFontsPath}/**/*`)
     .pipe(changed(distFontsPath))
     .pipe(gulp.dest(distFontsPath))
-    .pipe(browserSync.stream());
-});
+    .pipe(browserSync.stream())
+})
 
 gulp.task('icons', () => {
-  cleanUnusedFiles(distIconsPath, srcIconsPath);
+  cleanUnusedFiles(distIconsPath, srcIconsPath)
   return gulp
     .src(`${srcIconsPath}/**/*`)
     .pipe(changed(distIconsPath))
     .pipe(gulp.dest(distIconsPath))
-    .pipe(browserSync.stream());
-});
+    .pipe(browserSync.stream())
+})
 
 gulp.task('images', () => {
-  cleanUnusedFiles(distImagesPath, srcImagesPath);
+  cleanUnusedFiles(distImagesPath, srcImagesPath)
   return gulp
     .src(`${srcImagesPath}/**/*`)
     .pipe(changed(distImagesPath))
@@ -373,29 +373,29 @@ gulp.task('images', () => {
       ])
     )
     .pipe(gulp.dest(distImagesPath))
-    .pipe(browserSync.stream());
-});
+    .pipe(browserSync.stream())
+})
 
 gulp.task(
   'dist-sync',
   gulp.parallel('html', 'styles', 'scripts', 'fonts', 'icons', 'images')
-);
+)
 
 function fixPathForGulpWatch(oldPath) {
-  const pathString = oldPath;
-  const fix = /\\{1,}|\/{1,}/;
-  const userHome = require('os').homedir();
+  const pathString = oldPath
+  const fix = /\\{1,}|\/{1,}/
+  const userHome = require('os').homedir()
 
   return pathString
     .replace(new RegExp(fix, 'gm'), '/')
     .replace(new RegExp(fix, 'gm'), '/')
-    .replace('~', userHome);
+    .replace('~', userHome)
 }
 
 gulp.task('watch', () => {
-  gulp.parallel('dist-sync')();
+  gulp.parallel('dist-sync')()
 
-  const bsPort = 3000;
+  const bsPort = 3000
   browserSync.init({
     server: distPath,
     port: bsPort,
@@ -403,28 +403,28 @@ gulp.task('watch', () => {
       port: bsPort + 1
     },
     notify: true
-  });
+  })
 
   gulp
     .watch(`${fixPathForGulpWatch(srcHtmlPath)}/*.html`)
-    .on('change', gulp.parallel('html'));
+    .on('change', gulp.parallel('html'))
   gulp.watch(
     `${fixPathForGulpWatch(srcStylesPath)}/**/*.+(scss|sass|css)`,
     gulp.parallel('styles')
-  );
+  )
   gulp
     .watch(`${fixPathForGulpWatch(srcScriptsPath)}/**/*.js`)
-    .on('change', gulp.parallel('scripts'));
+    .on('change', gulp.parallel('scripts'))
   gulp
     .watch(`${fixPathForGulpWatch(srcFontsPath)}/**/*`)
-    .on('all', gulp.parallel('fonts'));
+    .on('all', gulp.parallel('fonts'))
   gulp
     .watch(`${fixPathForGulpWatch(srcIconsPath)}/**/*`)
-    .on('all', gulp.parallel('icons'));
+    .on('all', gulp.parallel('icons'))
   gulp
     .watch(`${fixPathForGulpWatch(srcImagesPath)}/**/*`)
-    .on('all', gulp.parallel('images'));
-});
+    .on('all', gulp.parallel('images'))
+})
 
 gulp.task('build-prod-scripts', () => {
   return gulp
@@ -461,7 +461,7 @@ gulp.task('build-prod-scripts', () => {
         }
       })
     )
-    .pipe(gulp.dest(distScriptsPath));
-});
+    .pipe(gulp.dest(distScriptsPath))
+})
 
-gulp.task('default', gulp.parallel('watch'));
+gulp.task('default', gulp.parallel('watch'))
