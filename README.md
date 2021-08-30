@@ -1,6 +1,6 @@
 # My gulp configuration
 
-Sorry for my english... This is my gulp configuration for work, hope someone will find it useful.
+Here is my gulp configuration for work, hope someone will find it useful.
 
 To use it:
 
@@ -12,27 +12,29 @@ To use it:
    npm i
    ```
 
-3. Initialize the project file structure:
+3. Initialize the project file structure using __one__ of these commands:
 
    ```console
    gulp init-project
+   npm run init
    ```
 
    If you want to use SASS instead of SCSS change the `cssPreprocessorType` value among the variables at the beginning of the file to `'sass'` before running `init-project` task:
 
    ```javascript
-   const cssDir = 'css';
-   // const cssPreprocessorType = 'sass';     // uncomment this
-   const cssPreprocessorType = 'scss'; // comment this
-   const distStylesPath = path.join(distPath, cssDir);
-   const srcStylesPath = path.join(srcPath, cssPreprocessorType);
+   const cssDir = 'css'
+   // const cssPreprocessorType = 'sass'     // uncomment this
+   const cssPreprocessorType = 'scss' // comment this
+   const distStylesPath = path.join(distPath, cssDir)
+   const srcStylesPath = path.join(srcPath, cssPreprocessorType)
    ```
 
-4. To start development server and watching tasks run one of these commands:
+4. To start development server and watching tasks run __one__ of these commands:
 
    ```console
    gulp watch
    gulp
+   npm run watch
    ```
 
 5. To sync the `dist` folder content with the contents of `src` run this command (the `watch` task runs it every time at the beginnig):
@@ -41,10 +43,11 @@ To use it:
    gulp dist-sync
    ```
 
-6. By default webpack compiles scripts in `src/js` folder in development mode when `watch` task is running. To make it do this in production mode run:
+6. By default webpack compiles scripts in `src/js` folder in development mode while `watch` task is running. To make it do this in production mode run __one__ of these commands:
 
    ```console
    gulp build-prod-scripts
+   npm run build-prod-scripts
    ```
 
 ## Project file structure
@@ -132,5 +135,5 @@ All tasks here compare files and directories in `src` and `dist` folders by name
       quality: 90,
       progressive: true
     })
-  ]);
+  ])
   ```

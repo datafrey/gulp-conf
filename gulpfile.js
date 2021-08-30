@@ -23,7 +23,7 @@ const distHtmlPath = distPath;
 const srcHtmlPath = srcPath;
 
 const cssDir = 'css';
-// const cssPreprocessorType = 'sass';
+// const cssPreprocessorType = 'sass'
 const cssPreprocessorType = 'scss';
 const distStylesPath = path.join(distPath, cssDir);
 const srcStylesPath = path.join(srcPath, cssPreprocessorType);
@@ -45,6 +45,16 @@ const distImagesPath = path.join(distPath, imgDir);
 const srcImagesPath = path.join(srcPath, imgDir);
 
 gulp.task('init-project', () => {
+  if (fs.existsSync(distPath) || fs.existsSync(srcPath)) {
+    console.log(
+      `======
+Seems like the project has already been initialized... 
+Remove src and dist folders to make this command work.
+======`
+    );
+    return gulp.src('.');
+  }
+
   const fsCb = (error) => (error ? console.log(error.toString()) : undefined);
 
   const gitignoreContent = `/node_modules
@@ -77,7 +87,9 @@ yarn-error.log*
   },
   "rules": {
     "no-var": "error",
-    "semi": "error",
+    "no-extra-semi": 0,
+    "no-empty": "warn",
+    "no-empty-function": "warn",
     "no-multi-spaces": "error",
     "space-in-parens": "error",
     "no-multiple-empty-lines": "error",
@@ -93,7 +105,7 @@ yarn-error.log*
   const prettierrcContent = `{
   "trailingComma": "none",
   "tabWidth": 2,
-  "semi": true,
+  "semi": false,
   "singleQuote": true,
   "bracketSpacing": true,
   "arrowParens": "always"
@@ -104,7 +116,6 @@ yarn-error.log*
     prettierrcContent,
     fsCb
   );
-
   [
     distPath,
     distStylesPath,
@@ -193,7 +204,6 @@ yarn-error.log*
   ['base', 'blocks', 'libs'].forEach((folder) =>
     fs.mkdir(path.join(srcStylesPath, folder), fsCb)
   );
-
   [
     `_animations.${cssPreprocessorType}`,
     `_fonts.${cssPreprocessorType}`,
